@@ -64,30 +64,32 @@ class Buku extends REST_Controller
 
     public function index_post()
     {
-        $configPoster = array(
-            'upload_path' => 'uploads/',            //path for upload
-            'max_size' => '100',
-            'max_width' => '1024',
-            'max_height' => '768',
-            'file_name' => 'logo_' . date('ymdhis')
-        );
-
-
-        $this->load->library('upload', $configPoster);
 
         $pathPoster = "";
         $pathBuku = "";
+
+        
+        $configPoster = array(
+            'upload_path' => 'uploads/',            //path for upload
+            'file_name' => 'logo_' . date('ymdhis')
+        );
 
         if ($this->upload->do_upload('poster')) {
             $data = array('upload_data' => $this->upload->data());
             $pathPoster = $configPoster['upload_path'] . '' . $data['upload_data']['orig_name'];
         }
 
+        $this->load->library('upload', $configPoster);
+
+    
+
+
         $configBuku = array(
             'upload_path' => 'uploads/',            //path for upload
             'allowed_types' => "pdf",   //restrict extension
             'file_name' => 'book_' . date('ymdhis')
         );
+        
         $this->upload->initialize($configBuku);
 
         if ($this->upload->do_upload('buku')) {
@@ -230,9 +232,6 @@ class Buku extends REST_Controller
 
                 $configPoster = array(
                     'upload_path' => 'uploads/',            //path for upload
-                    'max_size' => '100',
-                    'max_width' => '1024',
-                    'max_height' => '768',
                     'file_name' => 'logo_' . date('ymdhis')
                 );
 
