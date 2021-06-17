@@ -66,7 +66,6 @@ class Buku extends REST_Controller
     {
         $configPoster = array(
             'upload_path' => 'uploads/',            //path for upload
-            'allowed_types' => "gif|jpg|png|jpeg",   //restrict extension
             'max_size' => '100',
             'max_width' => '1024',
             'max_height' => '768',
@@ -142,7 +141,6 @@ class Buku extends REST_Controller
 
                 $configPoster = array(
                     'upload_path' => 'uploads/',
-                    'allowed_types' => "gif|jpg|png|jpeg",
                     'file_name' => 'logo_' . date('ymdhis')
                 );
 
@@ -232,7 +230,6 @@ class Buku extends REST_Controller
 
                 $configPoster = array(
                     'upload_path' => 'uploads/',            //path for upload
-                    'allowed_types' => "gif|jpg|png|jpeg",   //restrict extension
                     'max_size' => '100',
                     'max_width' => '1024',
                     'max_height' => '768',
