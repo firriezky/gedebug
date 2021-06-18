@@ -52,15 +52,16 @@ class Buku extends REST_Controller
             if ($delete) {
                 if ($this->post('is_admin') == 1) {
                     $this->session->set_flashdata('error', 'Berhasil Menghapus Buku');
-                    redirect($_SERVER['HTTP_REFERER']);
+                    redirect('/admin');
                 } else {
                     $returndata = array('status' => 1, 'message' => 'buku berhasil dihapus');
                     $this->set_response($returndata, 200);
                 }
             } else {
                 if ($this->post('is_admin') == 1) {
+                    echo "hiji";
                     $this->session->set_flashdata('error', 'Berhasil Menghapus Buku');
-                    redirect($_SERVER['HTTP_REFERER']);
+                    redirect('/admin');
                 } else {
                     $returndata = array('status' => 0, 'message' => 'buku gagal dihapus');
                     $this->set_response($returndata, 500);
@@ -69,14 +70,14 @@ class Buku extends REST_Controller
         } else {
             if ($this->post('is_admin') == 1) {
                 $this->session->set_flashdata('error', 'Gagal Menghapus Buku');
-                redirect($_SERVER['HTTP_REFERER']);
+                redirect('/admin');
+
             } else {
                 $returndata = array('status' => 0, 'message' => 'buku gagal dihapus');
                 $this->set_response($returndata, 500);
             }
         }
     }
-
 
 
     function hapusbuku_post()
@@ -352,11 +353,25 @@ class Buku extends REST_Controller
                 $this->db->where('id', $id);
                 $insert = $this->db->update('buku', $book);
                 if ($insert) {
-                    $returndata = array('status' => 1, 'message' => 'berhasil mengupdate buku data', 'book' => $book,);
-                    $this->set_response($returndata, 200);
+
+                    if ($this->post('is_admin') == 1) {
+                        $this->session->set_flashdata('success', 'Berhasil Mengupdate Data Buku');
+                        redirect($_SERVER['HTTP_REFERER']);
+                    } else {
+                        $returndata = array('status' => 1, 'message' => 'berhasil mengupdate buku data', 'book' => $book,);
+                        $this->set_response($returndata, 200);
+                    }
                 } else {
-                    $returndata = array('status' => 0, 'message' => 'gagal mengupdate buku with data', 'book' => $book,);
-                    $this->set_response($returndata, 422);
+
+                    if ($this->post('is_admin') == 1) {
+                        $this->session->set_flashdata('error', 'Gagal Mengupdate Data Buku');
+                        redirect($_SERVER['HTTP_REFERER']);
+                    } else {
+                        $returndata = array('status' => 0, 'message' => 'gagal mengupdate buku with data', 'book' => $book,);
+                        $this->set_response($returndata, 422);
+                    }
+
+                   
                 }
             }
         }

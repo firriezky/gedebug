@@ -28,7 +28,6 @@ class Admin extends CI_Controller
 	 */
 	public function index()
 	{
-
 		$data = $this->db->get('buku')->result();
 		$this->load->view('show', ['var_data' => $data]);
 	}
@@ -53,23 +52,23 @@ class Admin extends CI_Controller
 
 			redirect(base_url("admin"));
 		} else {
-			echo "Username dan password salah !";
+			$this->session->set_flashdata('error', 'Username atau Password Salah');
+			redirect($_SERVER['HTTP_REFERER']);
 		}
 	}
 
 	function edit_buku($id_buku)
 	{
-        echo "$id_buku";
-		// $data['siswa'] = $this->siswa_model->getById($kd_siswa);
-		// $this->load->view('template/header');
-		// $this->load->view('siswa/edit',$data);
-		// $this->load->view('template/footer');
+		$this->db->where('id', $id_buku);
+		$dataBuku = $this->db->get('buku')->result();
+		$data['buku'] = ($dataBuku);
+		$this->load->view('edit_buku', ['var_buku' => $dataBuku[0]]);
 	}
 
 
 	function logout()
 	{
 		$this->session->sess_destroy();
-		redirect(base_url('login'));
+		redirect(base_url(''));
 	}
 }
