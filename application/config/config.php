@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 // $config['base_url'] = 'http://for-macbook.feylabs.my.id/gedebug/';
-$config['base_url'] = 'http://localhost/wpU-RestAPI/';
+$config['base_url'] = 'http://localhost/WPU-RestAPI/';
 
 /*
 |--------------------------------------------------------------------------

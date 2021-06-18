@@ -318,7 +318,7 @@
 			<h2 class="active"> Sign In  </h2>
 
 			<!-- Login Form -->
-			<form action="<?php echo base_url('welcome/aksi_login'); ?>" method="post">		
+			<form action="<?php echo site_url('/yuk-login'); ?>" method="post">		
 				<input type="text" id="login" class="fadeIn second" name="username" placeholder="login">
 				<input type="text" id="password" class="fadeIn third" name="password" placeholder="password">
 				<input type="submit" class="fadeIn fourth" value="Log In">

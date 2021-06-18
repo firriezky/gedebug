@@ -50,15 +50,79 @@ class Buku extends REST_Controller
             $this->db->where('id', $id);
             $delete = $this->db->delete('buku');
             if ($delete) {
-                $returndata = array('status' => 1, 'message' => 'buku berhasil dihapus');
-                $this->set_response($returndata, 200);
+                if ($this->post('is_admin') == 1) {
+                    $this->session->set_flashdata('error', 'Berhasil Menghapus Buku');
+                    redirect($_SERVER['HTTP_REFERER']);
+                } else {
+                    $returndata = array('status' => 1, 'message' => 'buku berhasil dihapus');
+                    $this->set_response($returndata, 200);
+                }
+            } else {
+                if ($this->post('is_admin') == 1) {
+                    $this->session->set_flashdata('error', 'Berhasil Menghapus Buku');
+                    redirect($_SERVER['HTTP_REFERER']);
+                } else {
+                    $returndata = array('status' => 0, 'message' => 'buku gagal dihapus');
+                    $this->set_response($returndata, 500);
+                }
+            }
+        } else {
+            if ($this->post('is_admin') == 1) {
+                $this->session->set_flashdata('error', 'Gagal Menghapus Buku');
+                redirect($_SERVER['HTTP_REFERER']);
             } else {
                 $returndata = array('status' => 0, 'message' => 'buku gagal dihapus');
                 $this->set_response($returndata, 500);
             }
+        }
+    }
+
+
+
+    function hapusbuku_post()
+    {
+        $this->load->helper('url');
+        $id = $this->post('id');
+        $this->db->where('id', $id);
+        $data = $this->db->get('buku')->result();
+
+        if (count($data) > 0) {
+            try {
+                error_reporting(0);
+                $pathPoster = $data[0]->path_sampul;
+                $pathBuku = $data[0]->path_buku;
+                unlink($pathBuku);
+                unlink($pathPoster);
+            } catch (Exception $e) {
+            }
+
+            $this->db->where('id', $id);
+            $delete = $this->db->delete('buku');
+            if ($delete) {
+                if ($this->post('is_admin') == 1) {
+                    $this->session->set_flashdata('success', 'Berhasil Menghapus Buku');
+                    redirect($_SERVER['HTTP_REFERER']);
+                } else {
+                    $returndata = array('status' => 1, 'message' => 'buku berhasil dihapus');
+                    $this->set_response($returndata, 200);
+                }
+            } else {
+                if ($this->post('is_admin') == 1) {
+                    $this->session->set_flashdata('error', 'Berhasil Menghapus Buku');
+                    redirect($_SERVER['HTTP_REFERER']);
+                } else {
+                    $returndata = array('status' => 0, 'message' => 'buku gagal dihapus');
+                    $this->set_response($returndata, 500);
+                }
+            }
         } else {
-            $returndata = array('status' => 0, 'message' => 'id buku tidak ditemukan');
-            $this->set_response($returndata, 400);
+            if ($this->post('is_admin') == 1) {
+                $this->session->set_flashdata('error', 'Gagal Menghapus Buku');
+                redirect($_SERVER['HTTP_REFERER']);
+            } else {
+                $returndata = array('status' => 0, 'message' => 'buku gagal dihapus');
+                $this->set_response($returndata, 500);
+            }
         }
     }
 
@@ -103,6 +167,10 @@ class Buku extends REST_Controller
         );
 
         $insert = $this->db->insert('buku', $book);
+        if ($this->post('is_admin') == 1) {
+            $this->session->set_flashdata('success', 'Berhasil Menambah Buku');
+            redirect($_SERVER['HTTP_REFERER']);
+        }
         $returndata = array('status' => 1, 'data' => 'user details', 'book' => $book, 'message' => 'image uploaded successfully');
         $this->set_response($returndata, 200);
     }
@@ -129,7 +197,7 @@ class Buku extends REST_Controller
                 $this->db->where('id', $id);
                 $data = $this->db->get('buku')->result();
 
-                $pathBuku="";
+                $pathBuku = "";
                 try {
                     $pathPoster = $data[0]->path_sampul;
                     $pathBuku = $data[0]->path_buku;
@@ -166,7 +234,6 @@ class Buku extends REST_Controller
                 $insert = $this->db->update('buku', $book);
                 $returndata = array('status' => 1, 'message' => 'berhasil mengupdate buku with only poster', 'book' => $book);
                 $this->set_response($returndata, 200);
-
             } else if ($isBukuExists && !$isPosterExists) {
                 // If Only Buku is Replaced, but poster is not replaced
                 $this->db->where('id', $id);
@@ -208,7 +275,6 @@ class Buku extends REST_Controller
                 $insert = $this->db->update('buku', $book);
                 $returndata = array('status' => 1, 'message' => 'berhasil mengupdate buku with only buku', 'book' => $book,);
                 $this->set_response($returndata, 200);
-                
             } else if ($isPosterExists && $isBukuExists) {
                 // If Both Poster and Buku is Replaced
                 $this->db->where('id', $id);
@@ -224,7 +290,6 @@ class Buku extends REST_Controller
                     unlink($pathBuku);
                     unlink($pathPoster);
                 } catch (Exception $e) {
-
                 }
 
                 $configPoster = array(
@@ -238,7 +303,7 @@ class Buku extends REST_Controller
 
                 $this->load->library('upload', $configPoster);
 
-           
+
                 if ($this->upload->do_upload('poster')) {
                     $data = array('upload_data' => $this->upload->data());
                     $pathPoster = $configPoster['upload_path'] . '' . $data['upload_data']['orig_name'];
